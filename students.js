@@ -32,11 +32,14 @@ server.get('/:id', async (req, res) => {
 
   try {
 
-    const data = await db.select().from(table).where({id});
+    let data = await db.select('students.id', 'students.name', 'cohorts.name as cohort')
+      .from('students')
+      .innerJoin('cohorts', 'cohorts.id', '=', 'students.cohort_id')
+      .where('students.id', id);
 
     if (!data.length) {
 
-      res.status(404).json({message: 'User not found!'});
+      res.status(404).json({message: 'User not found!'})
       console.log(data);
       return;
 
@@ -48,6 +51,7 @@ server.get('/:id', async (req, res) => {
 
   catch (err) {
 
+    console.log('abc', err);
     genericErr(err, res);
 
   }
