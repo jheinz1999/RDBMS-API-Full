@@ -25,4 +25,31 @@ server.get('/', async (req, res) => {
 
 });
 
+server.get('/:id', async (req, res) => {
+
+  const id = req.params.id;
+
+  try {
+
+    const data = await db.select().where({id});
+
+    if (!data.length) {
+
+      res.status(404).json({message: 'User not found!'});
+      return;
+
+    }
+
+    res.status(200).json(data);
+
+  }
+
+  catch (err) {
+
+    genericErr(err, res);
+
+  }
+
+});
+
 module.exports = server;
