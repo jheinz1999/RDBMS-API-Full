@@ -32,7 +32,7 @@ server.get('/:id/students', async (req, res) => {
 
   try {
 
-    const data = await db.select().from(table).where({id});
+    const data = await db.select('students.*').from('cohorts').innerJoin('students', 'cohorts.id', '=', 'students.cohort_id').where('cohorts.id', id);
 
     if (!data.length) {
 
@@ -41,14 +41,13 @@ server.get('/:id/students', async (req, res) => {
 
     }
 
-    const students = await db.select().from('students').where({cohort_id: id});
-
-    res.status(200).json(students);
+    res.status(200).json(data);
 
   }
 
   catch (err) {
 
+    console.log(err);
     genericErr(err, res);
 
   }
