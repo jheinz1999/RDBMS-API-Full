@@ -125,4 +125,33 @@ server.put('/:id', async (req, res) => {
 
 });
 
+server.delete('/:id', async (req, res) => {
+
+  const id = req.params.id;
+
+  try {
+
+    const data = await db.select().from(table).where({ id });
+
+    if (!data.length) {
+
+      res.status(404).json({message: 'Student not found!'});
+      return;
+
+    }
+
+    const newData = await db.delete().from(table).where({ id });
+
+    res.status(200).json(newData);
+
+  }
+
+  catch (err) {
+
+    genericErr(err, res);
+
+  }
+
+});
+
 module.exports = server;
