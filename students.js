@@ -52,4 +52,30 @@ server.get('/:id', async (req, res) => {
 
 });
 
+server.post('/', async (req, res) => {
+
+  const { name, cohort_id } = req.body;
+
+  if (!name || !cohort_id) {
+
+    res.status(400).json({message: 'Invalid fields in request body'});
+    return;
+
+  }
+
+  try {
+
+    const id = await db.insert({ name, cohort_id });
+    res.status(201).json(id[0]);
+
+  }
+
+  catch (err) {
+
+    genericErr(err, res);
+
+  }
+
+});
+
 module.exports = server;
